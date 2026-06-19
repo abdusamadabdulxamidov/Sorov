@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>So'rovnoma – OТМI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#eef2f7;color:#222;min-height:100vh}
+
+.site-header{background:#0d3b6e;color:#fff;text-align:center;padding:1.6rem 1rem 1.3rem}
+.site-header .univ{font-size:.82rem;letter-spacing:.5px;opacity:.75;text-transform:uppercase;margin-bottom:.4rem}
+.site-header h1{font-size:1.25rem;font-weight:700;line-height:1.4;margin-bottom:.3rem}
+.site-header .sub{font-size:.85rem;opacity:.7}
+.header-line{height:3px;background:linear-gradient(90deg,#f39c12,#e74c3c,#f39c12);margin-top:1rem}
+
+#step-kirish{max-width:460px;margin:2.2rem auto;padding:0 1rem}
+.kirish-card{background:#fff;border-radius:14px;padding:2rem;box-shadow:0 3px 18px rgba(0,0,0,.1)}
+.kirish-card h2{font-size:1rem;color:#0d3b6e;margin-bottom:1.3rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.field-label{font-size:.85rem;color:#555;margin-bottom:.3rem;font-weight:600}
+.field-label span{color:#e74c3c}
+input[type=text]{width:100%;padding:.65rem .9rem;border:1.5px solid #c5d8e8;border-radius:8px;font-size:.95rem;color:#222;background:#fff;margin-bottom:.95rem;transition:border .2s;font-family:inherit}
+input[type=text]:focus{outline:none;border-color:#0d3b6e}
+.sovr-type-btns{display:flex;gap:.6rem;margin-bottom:.2rem}
+.type-btn{flex:1;padding:.65rem;border:2px solid #c5d8e8;border-radius:9px;background:#fff;cursor:pointer;font-size:.88rem;font-weight:600;color:#666;transition:all .18s;text-align:center}
+.type-btn.sel{border-color:#0d3b6e;background:#e8f0f8;color:#0d3b6e}
+.err-msg{color:#e74c3c;font-size:.82rem;margin-top:-.5rem;margin-bottom:.7rem;display:none}
+.kirish-btn{width:100%;padding:1rem;background:#0d3b6e;color:#fff;border:none;border-radius:10px;font-size:.98rem;font-weight:700;cursor:pointer;margin-top:1.2rem;transition:background .2s}
+.kirish-btn:hover{background:#0a2d55}
+
+#step-sorovnoma{display:none;max-width:680px;margin:1.8rem auto;padding:0 1rem 3rem}
+.user-badge{background:#0d3b6e;color:#fff;border-radius:10px;padding:.85rem 1.2rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.user-badge strong{font-size:.98rem;display:block}
+.user-badge span.meta{font-size:.8rem;opacity:.75;margin-top:2px;display:block}
+.back-link{color:rgba(255,255,255,.65);font-size:.8rem;cursor:pointer;text-decoration:underline;white-space:nowrap;margin-left:1rem}
+
+.form-card{background:#fff;border-radius:12px;padding:1.6rem;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.form-desc{background:#e8f0f8;border-left:4px solid #0d3b6e;padding:.85rem 1rem;border-radius:0 8px 8px 0;font-size:.86rem;color:#0d3b6e;margin-bottom:1.3rem;line-height:1.6}
+.section-title{font-size:.97rem;font-weight:700;color:#0d3b6e;margin:1.1rem 0 .7rem;padding-bottom:.3rem;border-bottom:2px solid #e8f0f8}
+
+.qblock{margin-bottom:1rem;padding:.85rem 1rem;background:#f7f9fc;border-radius:8px;border:1px solid #dde8f0}
+.qblock.err{border-color:#e74c3c!important;background:#fff8f8}
+.qtext{font-size:.88rem;font-weight:600;color:#1a3a52;margin-bottom:.6rem;line-height:1.5}
+.qnum{display:inline-flex;align-items:center;justify-content:center;background:#0d3b6e;color:#fff;width:21px;height:21px;border-radius:50%;font-size:.72rem;margin-right:6px;vertical-align:middle;flex-shrink:0}
+
+.radio-group{display:flex;flex-wrap:wrap;gap:.4rem}
+.ro{display:flex;align-items:center;gap:5px;padding:.36rem .75rem;background:#fff;border:1.5px solid #b8d0e4;border-radius:20px;cursor:pointer;font-size:.83rem;transition:all .15s;user-select:none}
+.ro:hover{border-color:#0d3b6e;background:#e8f0f8}
+.ro.sel{background:#0d3b6e;color:#fff;border-color:#0d3b6e}
+.ro input{display:none}
+
+.chk-group{display:flex;flex-direction:column;gap:.32rem}
+.co{display:flex;align-items:center;gap:8px;padding:.36rem .75rem;background:#fff;border:1.5px solid #b8d0e4;border-radius:7px;cursor:pointer;font-size:.83rem;transition:all .15s;user-select:none}
+.co:hover{border-color:#0d3b6e;background:#e8f0f8}
+.co.sel{border-color:#0d3b6e;background:#e8f0f8}
+.co input{width:15px;height:15px;accent-color:#0d3b6e;cursor:pointer;flex-shrink:0}
+
+textarea{width:100%;padding:.6rem .8rem;border:1.5px solid #b8d0e4;border-radius:8px;font-size:.87rem;resize:vertical;min-height:70px;font-family:inherit;color:#222;transition:border .2s}
+textarea:focus{outline:none;border-color:#0d3b6e}
+
+.submit-btn{display:block;width:100%;padding:.95rem;background:#0d3b6e;color:#fff;border:none;border-radius:10px;font-size:.97rem;font-weight:700;cursor:pointer;margin-top:1.3rem;transition:opacity .2s}
+.submit-btn:hover{opacity:.87}
+.submit-btn:disabled{opacity:.45;cursor:not-allowed}
+
+.success-box{text-align:center;padding:2.5rem 1rem;display:none}
+.success-box .ico{font-size:3.2rem;margin-bottom:.8rem}
+.success-box h2{color:#0d3b6e;margin-bottom:.5rem;font-size:1.2rem}
+.success-box p{color:#555;font-size:.9rem;line-height:1.7}
+.again-btn{margin-top:1.2rem;padding:.65rem 2rem;background:#0d3b6e;color:#fff;border:none;border-radius:8px;font-size:.9rem;cursor:pointer;font-weight:600}
+
+.footer{text-align:center;padding:1.5rem;font-size:.78rem;color:#999;margin-top:1rem}
+
+@media(max-width:480px){
+  .site-header h1{font-size:1.05rem}
+  .sovr-type-btns{flex-direction:column}
+  .kirish-card{padding:1.4rem}
+  .form-card{padding:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="univ">O'zbekiston Respublikasi Oliy ta'lim, fan va innovatsiyalar vazirligi</div>
+  <h1>Oziq-ovqat texnologiyasi va muhandisligi xalqaro instituti</h1>
+  <div class="sub">📋 Psixologik Monitoring So'rovnomasi · Anonim</div>
+  <div class="header-line"></div>
+</div>
+
+<!-- 1-QADAM: KIRISH -->
+<div id="step-kirish">
+  <div class="kirish-card">
+    <h2>👤 Ma'lumotlarni kiriting</h2>
+
+    <div class="field-label">Ism <span>*</span></div>
+    <input type="text" id="ism" placeholder="Ismingizni yozing">
+
+    <div class="field-label">Familya <span>*</span></div>
+    <input type="text" id="familya" placeholder="Familyangizni yozing">
+
+    <div class="field-label">Guruh <span>*</span></div>
+    <input type="text" id="guruh" placeholder="Masalan: 302-guruh">
+
+    <div class="field-label" style="margin-bottom:.55rem">So'rovnoma turi <span>*</span></div>
+    <div class="sovr-type-btns">
+      <button class="type-btn sel" id="btn-talaba" onclick="selType('talaba')">👨‍🎓 Talaba</button>
+      <button class="type-btn" id="btn-oqituvchi" onclick="selType('oqituvchi')">👨‍🏫 O'qituvchi</button>
+    </div>
+
+    <div id="kirish-err" class="err-msg">⚠️ Iltimos, barcha maydonlarni to'ldiring!</div>
+    <button class="kirish-btn" onclick="boshlash()">Davom etish →</button>
+  </div>
+</div>
+
+<!-- 2-QADAM: SO'ROVNOMA -->
+<div id="step-sorovnoma">
+  <div class="user-badge">
+    <div>
+      <strong id="badge-ism"></strong>
+      <span class="meta" id="badge-meta"></span>
+    </div>
+    <span class="back-link" onclick="qaytish()">← Orqaga</span>
+  </div>
+  <div id="sovr-container"></div>
+</div>
+
+<div class="footer">© Oziq-ovqat texnologiyasi va muhandisligi xalqaro instituti · So'rovnoma anonim</div>
+
+<script>
+var sovTuri='talaba';
+function selType(t){sovTuri=t;document.getElementById('btn-talaba').classList.toggle('sel',t==='talaba');document.getElementById('btn-oqituvchi').classList.toggle('sel',t==='oqituvchi');}
+
+function boshlash(){
+  var ism=document.getElementById('ism').value.trim();
+  var fam=document.getElementById('familya').value.trim();
+  var grx=document.getElementById('guruh').value.trim();
+  var err=document.getElementById('kirish-err');
+  if(!ism||!fam||!grx){err.style.display='block';return;}
+  err.style.display='none';
+  document.getElementById('badge-ism').textContent=ism+' '+fam;
+  document.getElementById('badge-meta').textContent=grx+' · '+(sovTuri==='talaba'?'Talaba so\'rovnomasi':'O\'qituvchi so\'rovnomasi');
+  document.getElementById('step-kirish').style.display='none';
+  document.getElementById('step-sorovnoma').style.display='block';
+  var c=document.getElementById('sovr-container');c.innerHTML='';
+  if(sovTuri==='talaba')buildTalaba(c);else buildOqituvchi(c);
+}
+
+function qaytish(){document.getElementById('step-kirish').style.display='block';document.getElementById('step-sorovnoma').style.display='none';}
+
+var tSavollar=[
+  "Nohushlik sababli Siz uzoq vaqt qayg'urasizmi?",
+  "Kechki damlarda o'zingizga ko'p vaqt ajratasizmi?",
+  "Ortiqcha batafsillik bilan gapirayotgan suhbatdoshingiz gapini bo'lasizmi?",
+  "Doimo siz shoshilib yurasizmi?",
+  "Birovdan yordam so'rash siz uchun og'ir kechasizmi?",
+  "Bo'sh vaqtlaringizda o'z muammolaringiz to'g'risida o'ylaysizmi?",
+  "Kasbdoshingiz uddasidan chiqa olmayotgan ishni uning o'zi uchun bajarasizmi?",
+  "Mazali ovqatdan siz o'zingizni tiya olasizmi?",
+  "Siz bir vaqtning o'zida bir necha ishni bajara olasizmi?",
+  "Suhbat chog'ida fikringiz «qaerdadir» uzoqda yashiringandek tuyuladimi?",
+  "Odamlarning zerikarli narsalar haqida gapirishlari tez-tez hayolingizga keladimi?",
+  "Navbatda turib asabiylashasizmi?",
+  "Boshqalarga maslahat berishni yoqtirasizmi?",
+  "Qaror qabul qilishdan oldin tez-tez ikkilanasizmi?",
+  "Tez gapirasizmi?"
+];
+
+function buildTalaba(c){
+  var h='<div class="form-card" id="tf"><div class="form-desc">Har bir savolni diqqat bilan o\'qing va Sizga mos javobni tanlang.<br><strong>Ha</strong> — tez-tez yoki doimiy | <strong>Yo\'q</strong> — kamdan-kam yoki umuman bo\'lmasa</div>';
+  h+='<div class="section-title">Stressga moyillikni aniqlash testi</div>';
+  tSavollar.forEach(function(q,i){
+    h+='<div class="qblock" id="tqb'+i+'"><div class="qtext"><span class="qnum">'+(i+1)+'</span>'+q+'</div><div class="radio-group">';
+    h+='<label class="ro" onclick="selR(this,\'tr'+i+'\')"><input type="radio" name="tr'+i+'" value="Ha"> Ha</label>';
+    h+='<label class="ro" onclick="selR(this,\'tr'+i+'\')"><input type="radio" name="tr'+i+'" value="Yo\'q"> Yo\'q</label>';
+    h+='</div></div>';
+  });
+  h+='<button class="submit-btn" id="tsbtn" onclick="subTalaba()">✅ Javoblarni yuborish</button></div>';
+  h+='<div class="success-box" id="tok"><div class="ico">✅</div><h2>Rahmat!</h2><p>Javoblaringiz muvaffaqiyatli yuborildi.<br>Qatnashganingiz uchun minnatdormiz.</p><button class="again-btn" onclick="qaytish()">Boshqa so\'rovnoma</button></div>';
+  c.innerHTML=h;
+}
+
+function subTalaba(){
+  var ok=true;var lines=[];
+  tSavollar.forEach(function(q,i){
+    var ch=document.querySelector('[name="tr'+i+'"]:checked');
+    document.getElementById('tqb'+i).classList.toggle('err',!ch);
+    if(!ch)ok=false;else lines.push((i+1)+'. '+q+'\n   Javob: '+ch.value);
+  });
+  if(!ok){alert('Iltimos, barcha savollarga javob bering!');return;}
+  var ha=lines.filter(function(l){return l.indexOf('Ha')>-1;}).length;
+  var ism=g('ism'),fam=g('familya'),grx=g('guruh');
+  var body="TALABA SO'ROVNOMASI — OТМI\n"+"=".repeat(45)+"\nIsm Familya: "+ism+" "+fam+"\nGuruh: "+grx+"\nSana: "+new Date().toLocaleString('uz-UZ')+"\nNatija: Ha="+ha+" | Yo'q="+(15-ha)+"\n\n"+"=".repeat(45)+"\nJAVOBLAR:\n"+"=".repeat(45)+"\n\n"+lines.join('\n\n');
+  yubor("Talaba So'rovnomasi – "+ism+" "+fam+" ("+grx+") – "+new Date().toLocaleDateString(),body,'t');
+}
+
+function buildOqituvchi(c){
+  var h='<div class="form-card" id="of"><div class="form-desc"><strong>Hurmatli hamkasb!</strong><br>Mazkur so\'rovnoma talabalarning ijtimoiy-psixologik holatini monitoring qilish maqsadida o\'tkazilmoqda. <strong>Anonim.</strong></div>';
+  h+=mTQ('oa0','1',"Qaysi guruhda psixologik muhit nisbatan og'ir deb hisoblaysiz?",'Guruh raqamini yozing...');
+  h+=mTQ('oa1','2',"So'nggi 1–2 oy ichida qaysi talabalarda xulq-atvorda o'zgarish kuzatildi?",'Xatti-harakatni tasvirlab yozing...');
+  h+='<div class="qblock" id="oab2"><div class="qtext"><span class="qnum">3</span>Talabalarda eng ko\'p uchrayotgan muammo turi:</div><div class="chk-group">';
+  ["Darsga qiziqishning pasayishi","Davomat muammosi","Tajovuzkorlik / konfliktga moyillik","Tushkunlik / passivlik","O'ziga ishonchsizlik","Oilaviy muammolar","Moliyaviy muammolar"].forEach(function(o){h+='<label class="co"><input type="checkbox" name="oc2" value="'+o+'"> '+o+'</label>';});
+  h+='</div></div>';
+  h+=mTQ('oa3','4',"Qaysi guruhlarda davomat muammosi yuqori?",'Guruh raqamlarini yozing...');
+  h+='<div class="qblock" id="oab4"><div class="qtext"><span class="qnum">5</span>Qaysi talabalarda stress yoki hissiy beqarorlik belgilari sezilmoqda?</div><div class="radio-group">';
+  ["Ko'pchilikda","Ayrim talabalar","Juda kam","Kuzatilmagan"].forEach(function(o){h+='<label class="ro" onclick="selR(this,\'or4\')"><input type="radio" name="or4" value="'+o+'"> '+o+'</label>';});
+  h+='</div></div>';
+  h+=mTQ('oa5','6',"Konfliktga moyil talabalar soni:",'Taxminiy son...');
+  h+='<div class="qblock" id="oab6"><div class="qtext"><span class="qnum">7</span>O\'qishni tashlash xavfi bor deb o\'ylagan talabalar bormi?</div><div class="radio-group">';
+  h+='<label class="ro" onclick="selR(this,\'or6\')"><input type="radio" name="or6" value="Ha"> Ha</label>';
+  h+='<label class="ro" onclick="selR(this,\'or6\')"><input type="radio" name="or6" value="Yo\'q"> Yo\'q</label>';
+  h+='</div><textarea id="oa6b" placeholder="Agar Ha bo\'lsa, izohlang..." style="margin-top:.6rem"></textarea></div>';
+  h+='<div class="qblock" id="oab7"><div class="qtext"><span class="qnum">8</span>Talabalarning umumiy motivatsiya darajasi:</div><div class="radio-group">';
+  ["Yuqori","O'rtacha","Past"].forEach(function(o){h+='<label class="ro" onclick="selR(this,\'or7\')"><input type="radio" name="or7" value="'+o+'"> '+o+'</label>';});
+  h+='</div></div>';
+  h+='<div class="qblock" id="oab8"><div class="qtext"><span class="qnum">9</span>Qaysi yo\'nalishda psixologik yordam zarur deb hisoblaysiz?</div><div class="chk-group">';
+  ["Stressni boshqarish","Motivatsiya oshirish","Konfliktni hal qilish","Moslashuv (1-kurslar uchun)","Individual konsultatsiya"].forEach(function(o){h+='<label class="co"><input type="checkbox" name="oc8" value="'+o+'"> '+o+'</label>';});
+  h+='</div></div>';
+  h+=mTQ('oa9','10',"Eng tezkor aralashuv talab qiladigan guruh yoki talaba:",'Tavsiflab yozing...');
+  h+='<button class="submit-btn" id="osbtn" onclick="subOqituvchi()">✅ Javoblarni yuborish</button></div>';
+  h+='<div class="success-box" id="ook"><div class="ico">✅</div><h2>Rahmat!</h2><p>Javoblaringiz muvaffaqiyatli yuborildi.<br>Hamkorligingiz uchun minnatdormiz.</p><button class="again-btn" onclick="qaytish()">Boshqa so\'rovnoma</button></div>';
+  c.innerHTML=h;
+  document.querySelectorAll('.co').forEach(function(el){el.querySelector('input').addEventListener('change',function(){el.classList.toggle('sel',this.checked);});});
+}
+
+function mTQ(id,n,q,ph){return '<div class="qblock" id="oab'+id+'"><div class="qtext"><span class="qnum">'+n+'</span>'+q+'</div><textarea id="'+id+'" placeholder="'+ph+'"></textarea></div>';}
+
+function subOqituvchi(){
+  var ism=g('ism'),fam=g('familya'),grx=g('guruh');
+  var mu=[...document.querySelectorAll('[name="oc2"]:checked')].map(function(x){return x.value;}).join(', ')||'(tanlanmagan)';
+  var st=document.querySelector('[name="or4"]:checked');
+  var ta=document.querySelector('[name="or6"]:checked');
+  var mo=document.querySelector('[name="or7"]:checked');
+  var yo=[...document.querySelectorAll('[name="oc8"]:checked')].map(function(x){return x.value;}).join(', ')||'(tanlanmagan)';
+  var v=function(id){return(document.getElementById(id)||{}).value||'(javob berilmagan)';};
+  var lines=[
+    "1. Psixologik muhit og'ir guruh:\n   "+v('oa0'),
+    "2. Xulq-atvorda o'zgarish:\n   "+v('oa1'),
+    "3. Ko'p uchrayotgan muammo:\n   "+mu,
+    "4. Davomat muammosi yuqori guruhlar:\n   "+v('oa3'),
+    "5. Stress/hissiy beqarorlik:\n   "+(st?st.value:'(tanlanmagan)'),
+    "6. Konfliktga moyil talabalar soni:\n   "+v('oa5'),
+    "7. O'qishni tashlash xavfi:\n   "+(ta?ta.value:'(tanlanmagan)')+"\n   Izoh: "+v('oa6b'),
+    "8. Umumiy motivatsiya:\n   "+(mo?mo.value:'(tanlanmagan)'),
+    "9. Psixologik yordam yo'nalishi:\n   "+yo,
+    "10. Tezkor aralashuv kerak bo'lgan guruh/talaba:\n   "+v('oa9')
+  ];
+  var body="O'QITUVCHI SO'ROVNOMASI — OТМI\n"+"=".repeat(45)+"\nIsm Familya: "+ism+" "+fam+"\nGuruh: "+grx+"\nSana: "+new Date().toLocaleString('uz-UZ')+"\n\n"+"=".repeat(45)+"\nJAVOBLAR:\n"+"=".repeat(45)+"\n\n"+lines.join('\n\n');
+  yubor("O'qituvchi So'rovnomasi – "+ism+" "+fam+" ("+grx+") – "+new Date().toLocaleDateString(),body,'o');
+}
+
+function selR(label,name){document.querySelectorAll('[name="'+name+'"]').forEach(function(inp){inp.closest('label').classList.remove('sel');});label.classList.add('sel');}
+function g(id){return document.getElementById(id).value.trim();}
+
+function yubor(subj,body,tur){
+  var btn=document.getElementById(tur+'sbtn');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Yuborilmoqda...';}
+  var ml='mailto:abdusamadabdulxamidov3710@gmail.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.open(ml,'_blank');
+  setTimeout(function(){
+    var f=document.getElementById(tur==='t'?'tf':'of');
+    var s=document.getElementById(tur==='t'?'tok':'ook');
+    if(f)f.style.display='none';
+    if(s)s.style.display='block';
+  },500);
+}
+</script>
+</body>
+</html>
